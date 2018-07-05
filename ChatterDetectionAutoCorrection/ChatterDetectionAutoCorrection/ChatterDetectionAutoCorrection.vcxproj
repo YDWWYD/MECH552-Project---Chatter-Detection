@@ -115,7 +115,7 @@
     <ClInclude Include="CBandpassFilters.h" />
     <ClInclude Include="CChatterDetection.h" />
     <ClInclude Include="CChatterDetectionSystem.h" />
-    <ClInclude Include="CEnergyMeanFilter.h" />
+    <ClInclude Include="CMeanFilter.h" />
     <ClInclude Include="CKalmanFilter.h" />
     <ClInclude Include="CMatrix.h" />
     <ClInclude Include="CNonlinearEnergyOperator.h" />
@@ -124,7 +124,7 @@
     <ClCompile Include="CBandpassFilters.cpp" />
     <ClCompile Include="CChatterDetection.cpp" />
     <ClCompile Include="CChatterDetectionSystem.cpp" />
-    <ClCompile Include="CEnergyMeanFilter.cpp" />
+    <ClCompile Include="CMeanFilter.cpp" />
     <ClCompile Include="CKalmanFilter.cpp" />
     <ClCompile Include="CMatrix.cpp" />
     <ClCompile Include="CNonlinearEnergyOperator.cpp" />

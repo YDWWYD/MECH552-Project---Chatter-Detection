@@ -4,7 +4,7 @@
 #include "CMatrix.h"
 #include <cmath>
 #include "CMeanFilter.h"
-#include "CEnergyMeanFilter.h"
+
 #define PI acos(-1.0)
 
 class CChatterDetection
@@ -29,5 +29,5 @@ public:
 	~CChatterDetection();
 	void RunChatterDetection(/*CMatrix* periodicAmplitude, double spindleSpeed, MeanFilterOutput* meanFilterOutputs, int numOfBand*/);
 };
-//double CalculateChatterEnergy(CMatrix* amplitude, CMatrix* frequency);
+
 #endif

@@ -26,12 +26,11 @@ CChatterDetectionSystem::CChatterDetectionSystem(int _N, int numOfFlute, double 
 	KalmanFilter = new CKalmanFilter(_N, spindleSpeed, samplingPeriod, lamda, _R);
 	BandpassFilters = new CBandpassFilters(numOfBand, numOfFlute*spindleSpeed/(2 * PI), samplingPeriod);
 	NEO = new CNonlinearEnergyOperator(samplingPeriod, numOfFlute*spindleSpeed / (2 * PI), *BandpassFilters);
-	//MeanFilter = new CMeanFilter(BandpassFilters->NumberOfFilters, integrationFactor, ndMean);
 
-	ChatterMeanFilter = new CEnergyMeanFilter(1, delay);
-	PeriodicMeanFilter = new CEnergyMeanFilter(1, delay);
-	FreqMeanFilter = new CEnergyMeanFilter(BandpassFilters->NumberOfFilters, ndMean);
-	AmpMeanFilter = new CEnergyMeanFilter(BandpassFilters->NumberOfFilters, ndMean);
+	ChatterMeanFilter = new CMeanFilter(1, delay);
+	PeriodicMeanFilter = new CMeanFilter(1, delay);
+	FreqMeanFilter = new CMeanFilter(BandpassFilters->NumberOfFilters, ndMean);
+	AmpMeanFilter = new CMeanFilter(BandpassFilters->NumberOfFilters, ndMean);
 
 	ChatterDetection = new CChatterDetection(ndMean, energyThreshold, energyRatioLimit);
 
@@ -57,7 +56,7 @@ CChatterDetectionSystem::~CChatterDetectionSystem()
 	delete ChatterFreq;
 	delete PrevChatterFreq;
 	delete ChatterFreqVariation;
-	delete ChatterOutput;
+	delete[] ChatterOutput;
 	delete ChatterEnergy;
 }
 
@@ -68,8 +67,6 @@ void CChatterDetectionSystem::Run(double measurement)
 	BandpassFilters->RunBandpassFilters(measurement-estimation);
 	NEO->RunNEO(BandpassFilters->BandpassOutputs);
 
-	//MeanFilter->FilteredFreq = FreqMeanFilter->RunMeanFilter(NEO->Freq);
-	//MeanFilter->FilteredAmp = AmpMeanFilter->RunMeanFilter(NEO->Amp);
 	FreqMeanFilter->RunMeanFilter(NEO->Freq);
 	AmpMeanFilter->RunMeanFilter(NEO->Amp);
 
@@ -81,7 +78,7 @@ void CChatterDetectionSystem::Run(double measurement)
 	if (ChatterDetection->ChatterDetected == 1)
 	{
 		//CalculateChatterFreq(MeanFilter->Output, ChatterDetection->ChatterEnergy, BandpassFilters->NumberOfFilters, ChatterEnergyThreshold); //Change threshold
-		CalculateChatterFreq(BandpassFilters->NumberOfFilters);
+		CalculateChatterFreq();
 		double newSpindleSpeed = CalculateNewSpindleSpeed(ChatterFreq->Content[0], SpindleSpeed);
 	}
 }
@@ -122,9 +119,10 @@ double CChatterDetectionSystem::CalculatePeriodicEnergy(CMatrix* amplitude)
 	return periodicEnergy;
 }
 
-void CChatterDetectionSystem::CalculateChatterFreq(/*MeanFilterOutput* meanFilterOutputs, double totalChatterEnergy,*/ int numOfInput/*, double threshold*/)
+void CChatterDetectionSystem::CalculateChatterFreq(/*MeanFilterOutput* meanFilterOutputs, double totalChatterEnergy, int numOfInput, double threshold*/)
 {
 	//sort(meanFilterOutputs, meanFilterOutputs + numOfInput, sortByChatterEnergy);
+	int numOfInput = BandpassFilters->NumberOfFilters;
 	for (int i = 0; i < numOfInput; i++)
 	{
 		ChatterOutput[i].Freq = FreqMeanFilter->MOutput->Content[i];

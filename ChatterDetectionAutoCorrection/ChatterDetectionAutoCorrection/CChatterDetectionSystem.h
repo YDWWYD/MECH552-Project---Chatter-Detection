@@ -21,11 +21,11 @@ public:
 	CKalmanFilter* KalmanFilter;
 	CBandpassFilters* BandpassFilters;
 	CNonlinearEnergyOperator* NEO;
-	CEnergyMeanFilter* FreqMeanFilter;
-	CEnergyMeanFilter* AmpMeanFilter;
+	CMeanFilter* FreqMeanFilter;
+	CMeanFilter* AmpMeanFilter;
 
-	CEnergyMeanFilter* ChatterMeanFilter;
-	CEnergyMeanFilter* PeriodicMeanFilter;
+	CMeanFilter* ChatterMeanFilter;
+	CMeanFilter* PeriodicMeanFilter;
 
 	CChatterDetection* ChatterDetection;
 
@@ -55,7 +55,7 @@ public:
 	CChatterDetectionSystem(int N, int numOfFlute, double spindleSpeed, double samplingPeriod, double lamda, double R, int numOfBand, double energyThreshold, double energyRatioLimit, double integrationFactor, double chatterEnergyThreshold, int ndMean, int delay);
 	~CChatterDetectionSystem();
 	void Run(double measuremnt);
-	void CalculateChatterFreq(/*MeanFilterOutput* meanFilterOutputs, double totalChatterEnergy,*/ int numOfInput/*, double threshold*/);
+	void CalculateChatterFreq(/*MeanFilterOutput* meanFilterOutputs, double totalChatterEnergy, int numOfInput, double threshold*/);
 	double CalculateNewSpindleSpeed(double dominantChatterFreq, double currentSpindleSpeed);
 	void UpdateSystem(double newSpindleSpeed);
 	double FindDominantFreq(void);

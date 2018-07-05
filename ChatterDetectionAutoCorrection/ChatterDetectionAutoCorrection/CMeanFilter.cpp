@@ -1,98 +1,68 @@
 #include "CMeanFilter.h"
 
-CMeanFilter::CMeanFilter(int numOfInput, double integrationFactor, int _ndMean) 
+CMeanFilter::CMeanFilter(int numOfInput, int numOfDelay)
 {
 	Counter = 0;
-	//ndMean = round(1 / (spindleSpeed / 2 / PI) / samplingPeriod);
-	ndMean = (double)_ndMean;
-
-	FilteredFreq = new CMatrix(numOfInput, 1);
-	FilteredAmp = new CMatrix(numOfInput, 1);
-	PrevAveAmp = new CMatrix(numOfInput, 1);
-	PrevAveFreq = new CMatrix(numOfInput, 1);
-	
-	Output = new MeanFilterOutput[numOfInput];
-	NumberOfInput = numOfInput;
-	IntegrationFactor = integrationFactor;
-
-	//FreqFilter = new CEnergyMeanFilter(numOfInput, ndMean);
-	//AmpFilter = new CEnergyMeanFilter(numOfInput, ndMean);
+	NumOfInput = numOfInput;
+	NumDelay = (double)numOfDelay;
+	Output = 0;
+	MOutput = new CMatrix(numOfInput, 1);
+	MPrevOutput = new CMatrix(numOfInput, 1);
+	PrevOutput = 0;
 }
 
-CMeanFilter::~CMeanFilter(void)
+CMeanFilter::~CMeanFilter()
 {
-	delete FilteredFreq;
-	delete FilteredAmp;
-	delete PrevAveFreq;
-	delete PrevAveAmp;
-	delete Output;
+	delete MOutput;
+	delete MPrevOutput;
 }
 
-void CMeanFilter::RunMeanFilter(CMatrix* freqIn, CMatrix* ampIn)
+CMatrix* CMeanFilter::RunMeanFilter(CMatrix* input)
 {
-	//FilteredFreq = FreqFilter->RunMeanFilter(freqIn);
-	//FilteredAmp = AmpFilter->RunMeanFilter(ampIn);
-	for (int i = 0; i < NumberOfInput; i++)
+	for (int i = 0; i < NumOfInput; i++)
 	{
-		Output[i].Freq = FilteredFreq->Content[i];
-		Output[i].Amp = FilteredAmp->Content[i];
-		Output[i].BandNumber = i + 1;
-		double currentFreq = Output[i].Freq;
-		double currentAmp = Output[i].Amp;
-		if (currentFreq != 0)
-			Output[i].ChatterEnergy = pow(currentAmp, 2)*pow(currentFreq, 2 * IntegrationFactor);
+		if (Counter<NumDelay)
+		{
+			if (Counter != 0)
+			{
+				MOutput->Content[i] = (Counter - 1) / Counter*MPrevOutput->Content[i] + 1 / Counter*input->Content[i];
+			}
+		}
 		else
-			Output[i].ChatterEnergy = 0;
+		{
+			MOutput->Content[i] = (NumDelay - 1) / NumDelay*MPrevOutput->Content[i] + 1 / NumDelay*input->Content[i];
+		}
 	}
 
-	//if (Counter < ndMean)
-	//{
-	//	if (Counter != 0)
-	//	{
-	//		for (int i = 0; i < NumberOfInput; i++)
-	//		{
-	//			FilteredFreq->Content[i] = (Counter - 1) / (Counter)*PrevAveFreq->Content[i] + 1 / (Counter)*freqIn->Content[i];
-	//			FilteredAmp->Content[i] = (Counter - 1) / (Counter)*PrevAveAmp->Content[i] + 1 / (Counter)*ampIn->Content[i];
+	// Update previous average chatter and periodic energy
+	for (int i = 0; i < NumOfInput; i++)
+	{
+		MPrevOutput->Content[i] = MOutput->Content[i]; // in [rad/s]
+	}
 
-	//			Output[i].Freq = FilteredFreq->Content[i];
-	//			Output[i].Amp = FilteredAmp->Content[i];
-	//			Output[i].BandNumber = i + 1;
-	//			double currentFreq = Output[i].Freq;
-	//			double currentAmp = Output[i].Amp;
-	//			if (currentFreq != 0)
-	//				Output[i].ChatterEnergy = pow(currentAmp, 2)*pow(currentFreq, 2 * IntegrationFactor);
-	//			else
-	//				Output[i].ChatterEnergy = 0;
-	//		}
-	//	}
-	//}
+	Counter++;
 
-	//else
-	//{
-	//	for (int i = 0; i < NumberOfInput; i++)
-	//	{
-	//		FilteredFreq->Content[i] = (ndMean - 1) / ndMean*PrevAveFreq->Content[i] + 1 / ndMean*freqIn->Content[i]; // In [rad/s]
-	//		FilteredAmp->Content[i] = (ndMean - 1) / ndMean*PrevAveAmp->Content[i] + 1 / ndMean*ampIn->Content[i];
+	return MOutput;
+}
 
-	//		Output[i].Freq = FilteredFreq->Content[i];
-	//		Output[i].Amp = FilteredAmp->Content[i];
-	//		Output[i].BandNumber = i + 1;
-	//		double currentFreq = Output[i].Freq;
-	//		double currentAmp = Output[i].Amp;
-	//		if (currentFreq != 0)
-	//			Output[i].ChatterEnergy = pow(currentAmp, 2)*pow(currentFreq, 2 * IntegrationFactor);
-	//		else
-	//			Output[i].ChatterEnergy = 0;
-	//	}
-	//}
+double CMeanFilter::RunMeanFilter(double input)
+{
+	if (Counter<NumDelay)
+	{
+		if (Counter != 0)
+		{
+			Output = (Counter - 1) / Counter*PrevOutput + 1 / Counter*input;
+		}
+	}
+	else
+	{
+		Output = (NumDelay - 1) / NumDelay*PrevOutput + 1 / NumDelay*input;
+	}
 
-	// //Update previous average frequency and amplitude
-	//for (int i = 0; i < NumberOfInput; i++)
-	//{
-	//	PrevAveFreq->Content[i] = FilteredFreq->Content[i]; // in [rad/s]
-	//	PrevAveAmp->Content[i] = FilteredAmp->Content[i];
-	//}
+	// Update previous average chatter and periodic energy
+	PrevOutput = Output;
 
-	////Update counter;
-	//Counter++;
+	Counter++;
+
+	return Output;
 }

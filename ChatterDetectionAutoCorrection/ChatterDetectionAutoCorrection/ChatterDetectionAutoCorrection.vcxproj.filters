@@ -33,7 +33,7 @@
     <ClInclude Include="CNonlinearEnergyOperator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CEnergyMeanFilter.h">
+    <ClInclude Include="CMeanFilter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,7 +59,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CEnergyMeanFilter.cpp">
+    <ClCompile Include="CMeanFilter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

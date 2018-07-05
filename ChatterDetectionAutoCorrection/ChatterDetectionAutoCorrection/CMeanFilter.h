@@ -2,39 +2,26 @@
 #define __CMeanFilter_
 
 #include "CMatrix.h"
-#include "CEnergyMeanFilter.h"
 //#include <cmath>
 //#define PI acos(-1.0)
-
-struct MeanFilterOutput
-{
-	double Freq;
-	double Amp;
-	double ChatterEnergy;
-	int BandNumber;
-};
 
 class CMeanFilter
 {
 public:
-	CMatrix* FilteredFreq;
-	CMatrix* FilteredAmp;
-	double ndMean; //Must use double or explicitly cast to double in calculation to avoid converting to int
-	MeanFilterOutput* Output;
-	//CEnergyMeanFilter* FreqFilter;
-	//CEnergyMeanFilter* AmpFilter;
+	double Output;
+	CMatrix* MOutput;
+	double NumDelay; //Must use double or explicitly cast to double in calculations to avoid converting to int
+	int NumOfInput;
 
 private:
-	CMatrix* PrevAveFreq;
-	CMatrix* PrevAveAmp;
-	double Counter; // explicit double or cast to double to avoid being converted to int in RunMeanFilter()
-	int NumberOfInput;
-	double IntegrationFactor;
+	double PrevOutput;
+	CMatrix* MPrevOutput;
+	double Counter; // double type or cast to double to avoid being converted to int in RunMeanFilter()
 
 public:
-	CMeanFilter(int numOfInput, double integrationFactor, int _ndMean);
+	CMeanFilter(int numOfInput, int numOfDelay);
 	~CMeanFilter();
-	void RunMeanFilter(CMatrix* freqInput, CMatrix* ampInput);
+	CMatrix* RunMeanFilter(CMatrix* input);
+	double RunMeanFilter(double input);
 };
-
 #endif

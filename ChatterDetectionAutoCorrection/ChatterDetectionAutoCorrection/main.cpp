@@ -29,6 +29,7 @@ int main(void)
 	case(1): N = 20;
 			 filePath = "..\\CNCData.txt";
 			 numOfData = 100032;
+			 //numOfData = 100;
 			 Ts = (double)1 / 10000;
 			 samplingPeriod = (double)1 / 10000; //Ts calculated by DAQ
 			 break;
@@ -156,22 +157,22 @@ int main(void)
 		//auto time = endTime - startTime;
 		//cout << "Each loop takes " << chrono::duration_cast<chrono::microseconds>(time).count() << " microseconds to run." << endl;
 
-		for (int j = 0; j < myChatterDetectionSys.BandpassFilters->NumberOfFilters; j++)
-		{
-			fprintf(BandpassPointer, "%.8f	", myChatterDetectionSys.BandpassFilters->BandpassOutputs->Content[j]);
-			fprintf(FrequencyPointer, "%.8f	", myChatterDetectionSys.NEO->Freq->Content[j] / 2 / PI); //[Hz]
-			fprintf(AmplitudePointer, "%.8f	", myChatterDetectionSys.NEO->Amp->Content[j]);
-			fprintf(FilteredFreqPointer, "%.8f	", myChatterDetectionSys.FreqMeanFilter->MOutput->Content[j]);//[rad/s]
-			fprintf(FilteredAmpPointer, "%.8f	", myChatterDetectionSys.AmpMeanFilter->MOutput->Content[j]);
-		}
-		fprintf(BandpassPointer, "\n");
-		fprintf(FrequencyPointer, "\n");
-		fprintf(AmplitudePointer, "\n");
-		fprintf(FilteredFreqPointer, "\n");
-		fprintf(FilteredAmpPointer, "\n");
+		//for (int j = 0; j < myChatterDetectionSys.BandpassFilters->NumberOfFilters; j++)
+		//{
+		//	fprintf(BandpassPointer, "%.8f	", myChatterDetectionSys.BandpassFilters->BandpassOutputs->Content[j]);
+		//	fprintf(FrequencyPointer, "%.8f	", myChatterDetectionSys.NEO->Freq->Content[j] / 2 / PI); //[Hz]
+		//	fprintf(AmplitudePointer, "%.8f	", myChatterDetectionSys.NEO->Amp->Content[j]);
+		//	fprintf(FilteredFreqPointer, "%.8f	", myChatterDetectionSys.FreqMeanFilter->MOutput->Content[j]);//[rad/s]
+		//	fprintf(FilteredAmpPointer, "%.8f	", myChatterDetectionSys.AmpMeanFilter->MOutput->Content[j]);
+		//}
+		//fprintf(BandpassPointer, "\n");
+		//fprintf(FrequencyPointer, "\n");
+		//fprintf(AmplitudePointer, "\n");
+		//fprintf(FilteredFreqPointer, "\n");
+		//fprintf(FilteredAmpPointer, "\n");
 		fprintf(ChatterDetectionPointer, "%d\n", myChatterDetectionSys.ChatterDetection->ChatterDetected);
-		fprintf(FilteredChatterEng, "%.6f\n", myChatterDetectionSys.ChatterMeanFilter->Output);
-		fprintf(FilteredPeriodicEng, "%.6f\n", myChatterDetectionSys.PeriodicMeanFilter->Output);
+		//fprintf(FilteredChatterEng, "%.6f\n", myChatterDetectionSys.ChatterMeanFilter->Output);
+		//fprintf(FilteredPeriodicEng, "%.6f\n", myChatterDetectionSys.PeriodicMeanFilter->Output);
 		//fprintf(TimerPointer, "%d\n", chrono::duration_cast<chrono::microseconds>(time).count());
 	}		
 	//clockEnd = clock();
