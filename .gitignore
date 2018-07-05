@@ -33,3 +33,6 @@
 
 # All .txt files
 *.txt
+
+# Folder called .vs
+.vs/
