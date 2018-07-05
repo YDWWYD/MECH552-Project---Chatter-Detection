@@ -37,7 +37,6 @@ CChatterDetectionSystem::CChatterDetectionSystem(int _N, int numOfFlute, double 
 	ChatterFreq = new CMatrix(BandpassFilters->NumberOfFilters, 1);
 	PrevChatterFreq = new CMatrix(BandpassFilters->NumberOfFilters, 1);
 	ChatterFreqVariation = new CMatrix(BandpassFilters->NumberOfFilters, 1);
-
 	ChatterEnergy =  new CMatrix(BandpassFilters->NumberOfFilters, 1);
 	ChatterOutput = new SChatterOutput[BandpassFilters->NumberOfFilters];
 }
@@ -77,7 +76,6 @@ void CChatterDetectionSystem::Run(double measurement)
 
 	if (ChatterDetection->ChatterDetected == 1)
 	{
-		//CalculateChatterFreq(MeanFilter->Output, ChatterDetection->ChatterEnergy, BandpassFilters->NumberOfFilters, ChatterEnergyThreshold); //Change threshold
 		CalculateChatterFreq();
 		double newSpindleSpeed = CalculateNewSpindleSpeed(ChatterFreq->Content[0], SpindleSpeed);
 	}
@@ -123,14 +121,24 @@ void CChatterDetectionSystem::CalculateChatterFreq(/*MeanFilterOutput* meanFilte
 {
 	//sort(meanFilterOutputs, meanFilterOutputs + numOfInput, sortByChatterEnergy);
 	int numOfInput = BandpassFilters->NumberOfFilters;
+	double totalEng = 0;
 	for (int i = 0; i < numOfInput; i++)
 	{
 		ChatterOutput[i].Freq = FreqMeanFilter->MOutput->Content[i];
 		ChatterOutput[i].Amp = AmpMeanFilter->MOutput->Content[i];
-		ChatterOutput[i].BandNumber = i;
+		ChatterOutput[i].BandNumber = i + 1;
 		ChatterOutput[i].ChatterEnergy = ChatterEnergy->Content[i];
+		totalEng += ChatterEnergy->Content[i];
  	}
-	//double thresholdEnergy = totalChatterEnergy*threshold;
+
+	for (int i = 0; i < numOfInput; i++)
+	{
+		cout << "Freq is " << ChatterOutput[i].Freq << endl;
+		//cout << "Amp is " << ChatterOutput[i].Amp << endl;
+		cout << "Chatter energy ratio is " << ChatterOutput[i].ChatterEnergy / totalEng << endl;
+	}
+	cout << "\n\n";
+
 	double tempTotalEnergy = 0;
 
 	for (int i = 0; i < numOfInput; i++)
@@ -139,7 +147,7 @@ void CChatterDetectionSystem::CalculateChatterFreq(/*MeanFilterOutput* meanFilte
 		tempTotalEnergy += maxChatterEnergy->ChatterEnergy;
 
 		ChatterFreq->Content[i] = maxChatterEnergy->Freq;
-		//cout << "Chatter Frequency " << i << " is " << ChatterFreq->Content[i] / (2 * PI) << "Hz" << endl;
+		cout << "Chatter Frequency " << i << " is " << ChatterFreq->Content[i]  << "rad/s" << endl;
 
 		if (tempTotalEnergy >= ThresholdEng)
 		{
@@ -164,13 +172,7 @@ void CChatterDetectionSystem::CalculateChatterFreq(/*MeanFilterOutput* meanFilte
 		}
 	}
 
-	//for (int i = 0; i < numOfInput; i++)
-	//{
-	//	cout << "Freq is " << meanFilterOutputs[i].Freq << endl;
-	//	cout << "Amp is " << meanFilterOutputs[i].Amp << endl;
-	//	cout << "Chatter energy is " << meanFilterOutputs[i].ChatterEnergy << endl;
-	//}
-	//cout << "\n\n";
+
 }
 
 double CChatterDetectionSystem::CalculateNewSpindleSpeed(double dominantChatterFreq, double currentSpindleSpeed)
@@ -184,7 +186,7 @@ double CChatterDetectionSystem::CalculateNewSpindleSpeed(double dominantChatterF
 		newSpindleSpeed = lowSpindleSpeed;
 	else if (highSpindleSpeed / (2 * PI) * 60 >= 12000) //then if high frequency > 12000 rpm which is the limit
 		newSpindleSpeed = lowSpindleSpeed;
-	else if (/*(#+1)*/highSpindleSpeed / (2 * PI) >= 1/SamplingPeriod/2) //then if high frequency > Nyquist freq, choose the lower one
+	else if ((BandpassFilters->NumberOfFilters + 1)* highSpindleSpeed / (2 * PI) >= 1/SamplingPeriod/2) //then if high frequency > Nyquist freq, choose the lower one
 		newSpindleSpeed = lowSpindleSpeed;
 	else
 		newSpindleSpeed = highSpindleSpeed;

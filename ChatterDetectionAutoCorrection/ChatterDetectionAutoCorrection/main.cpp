@@ -28,8 +28,8 @@ int main(void)
 	{
 	case(1): N = 20;
 			 filePath = "..\\CNCData.txt";
-			 numOfData = 100032;
-			 //numOfData = 100;
+			 //numOfData = 100032;
+			 numOfData = 35701;
 			 Ts = (double)1 / 10000;
 			 samplingPeriod = (double)1 / 10000; //Ts calculated by DAQ
 			 break;
@@ -66,8 +66,8 @@ int main(void)
 	double integrationFactor = 0; // factor is 0 or 1 or -1, depending on the type of signal
 	double energyThreshold = 1E-8;
 	double energyRatioLimit = 0.2;
-	int energyMeanFilterDelay = (int)round(1 / (spindleSpeed / 2 / PI) / samplingPeriod / 2) * 5;
-	int ndMean = (int)round(1 / (spindleSpeed / 2 / PI) / samplingPeriod);
+	int energyMeanFilterDelay = (int)round(1 / (spindleSpeed / 2 / PI) / samplingPeriod / 2) * 5; // delays of chatter and periodic energy filters
+	int ndMean = (int)round(1 / (spindleSpeed / 2 / PI) / samplingPeriod); // delay of amp and freq mean filters
 
 	double startFreq = spindleSpeed / (2 * PI); // [Hz]
 	double stopFreq = N*startFreq; // [Hz]

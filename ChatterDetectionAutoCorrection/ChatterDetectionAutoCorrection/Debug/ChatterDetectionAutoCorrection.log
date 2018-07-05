@@ -2,5 +2,11 @@
 g:\mech552 project - chatter detection\chatterdetectionautocorrection\chatterdetectionautocorrection\main.cpp(79): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
 g:\mech552 project - chatter detection\chatterdetectionautocorrection\chatterdetectionautocorrection\main.cpp(84): warning C4101: 'clockBegin': unreferenced local variable
 g:\mech552 project - chatter detection\chatterdetectionautocorrection\chatterdetectionautocorrection\main.cpp(84): warning C4101: 'clockEnd': unreferenced local variable
+  CChatterDetectionSystem.cpp
+  Generating Code...
+  Compiling...
+  CMeanFilter.cpp
+  CChatterDetection.cpp
+  Generating Code...
   ChatterDetectionAutoCorrection.vcxproj -> G:\MECH552 Project - Chatter Detection\ChatterDetectionAutoCorrection\Debug\ChatterDetectionAutoCorrection.exe
   ChatterDetectionAutoCorrection.vcxproj -> G:\MECH552 Project - Chatter Detection\ChatterDetectionAutoCorrection\Debug\ChatterDetectionAutoCorrection.pdb (Partial PDB)

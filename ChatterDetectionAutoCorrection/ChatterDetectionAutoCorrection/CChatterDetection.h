@@ -2,10 +2,6 @@
 #define __CChatterDetection_
 
 #include "CMatrix.h"
-#include <cmath>
-#include "CMeanFilter.h"
-
-#define PI acos(-1.0)
 
 class CChatterDetection
 {
@@ -16,13 +12,12 @@ public:
 	double EnergyRatio;
 	double EnergyThreshold;
 	double EnergyRatioLimit;
-	CMatrix* DelayedPeriodicEnergy;
 
 private:
 	int PrevChatterDetected;
 	int DetectionDelay;
 	double IntegrationFactor;
-
+	CMatrix* DelayedPeriodicEnergy;
 
 public:
 	CChatterDetection(double ndMean, double energyThreshold, double energyRatioLimit);

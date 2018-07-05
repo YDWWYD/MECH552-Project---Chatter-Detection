@@ -2,8 +2,6 @@
 #define __CKalmanFilter_
 
 #include "CMatrix.h"
-//#include <cmath>
-//#define PI acos(-1.0)
 
 class CKalmanFilter
 {

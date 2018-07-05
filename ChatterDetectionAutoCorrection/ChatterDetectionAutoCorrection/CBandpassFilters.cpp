@@ -135,21 +135,6 @@ void CBandpassFilters::CalculateCoefficients(double TPE)
 	}
 }
 
-//void CBandpassFilters::DenominatorCoeffi(double Q, double w0, double a1, double a2, double Ts)
-//{
-//	for (int i = 0; i < Numerator->Row; i++)
-//	{
-//		Denominator->Content[i*Denominator->Column + 0] = Q;
-//		Denominator->Content[i*Denominator->Column + 1] = Q;
-//		Denominator->Content[i*Denominator->Column + 2] = Q;
-//		Denominator->Content[i*Denominator->Column + 3] = Q;
-//		Denominator->Content[i*Denominator->Column + 4] = Q;
-//		Denominator->Content[i*Denominator->Column + 5] = Q;
-//		Denominator->Content[i*Denominator->Column + 6] = Q;
-//		Denominator->Content[i*Denominator->Column + 7] = Q;
-//	}
-//}
-
 double CBandpassFilters::CalculateInput(double measurement, double estimation)
 {
 	return measurement - estimation;

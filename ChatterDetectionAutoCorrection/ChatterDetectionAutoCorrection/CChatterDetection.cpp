@@ -3,9 +3,7 @@
 CChatterDetection::CChatterDetection(double ndMean, double energyThreshold, double energyRatioLimit)
 {
 	ChatterDetected = 0;
-	//PeriodicEnergy = new double[1];
 	PeriodicEnergy = 0;
-	//ChatterEnergy = new double[1];
 	ChatterEnergy = 0;
 
 	EnergyRatio = 0;
@@ -20,8 +18,6 @@ CChatterDetection::CChatterDetection(double ndMean, double energyThreshold, doub
 CChatterDetection::~CChatterDetection(void)
 {
 	delete DelayedPeriodicEnergy;
-	//delete PeriodicEnergy;
-	//delete ChatterEnergy;
 }
 
 void CChatterDetection::RunChatterDetection(/*CMatrix* periodicAmplitude, double spindleSpeed, MeanFilterOutput* meanFilterOutputs, int numOfBand*/)

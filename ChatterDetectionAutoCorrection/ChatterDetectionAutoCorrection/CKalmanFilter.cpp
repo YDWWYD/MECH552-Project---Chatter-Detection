@@ -53,105 +53,6 @@ void CKalmanFilter::UpdateKalman(double newSpindleSpeed) //[rad/s]
 	K->ResetToZero(); // K_k [2N x 1]
 }
 
-// using index
-//double CKalmanFilter::RunKalman(double measurement)
-//{
-//	 1: q_k_prior
-//	
-//	for (int i = 0; i < N; i++)
-//	{
-//		qPrior->Content[qPrior->Index(2*i, 0)] = Phi->Content[Phi->Index(2 * i, 0)] * q->Content[q->Index(2 * i, 0)] - Phi->Content[Phi->Index(2 * i + 1, 0)] * q->Content[q->Index(2 * i + 1, 0)];
-//		qPrior->Content[qPrior->Index(2*i+1, 0)] = Phi->Content[Phi->Index(2 * i+1, 0)] * q->Content[q->Index(2 * i, 0)] + Phi->Content[Phi->Index(2 * i, 0)] * q->Content[q->Index(2 * i + 1, 0)];
-//	}
-//
-//	 2: P_k_prior
-//	 Phi*P_K-1*Phi'
-//	for (int i = 0; i < N; i++)
-//	{
-//		for (int j = 0; j < N; j++)
-//		{
-//			PPrior->Content[PPrior->Index(2*i, 2*j)] = Phi->Content[Phi->Index(2 * j, 0)] * (P->Content[P->Index(2 * i, 2 * j )] * Phi->Content[Phi->Index(2 * i, 0)] - P->Content[P->Index(2 * i + 1, 2 * j)] * Phi->Content[Phi->Index(2 * i + 1, 0)]) -
-//												   Phi->Content[Phi->Index(2 * j + 1, 0)] * (P->Content[P->Index(2 * i, 2 * j + 1)] * Phi->Content[Phi->Index(2 * i, 0)] - P->Content[P->Index(2 * i + 1, 2 * j + 1)] * Phi->Content[Phi->Index(2 * i + 1, 0)]);
-//
-//			PPrior->Content[PPrior->Index(2*i, 2*j+1)] = Phi->Content[Phi->Index(2 * j + 1, 0)] * (P->Content[P->Index(2 * i, 2 * j)] * Phi->Content[Phi->Index(2 * i, 0)] - P->Content[P->Index(2 * i + 1, 2 * j)] * Phi->Content[Phi->Index(2 * i + 1, 0)]) +
-//												     Phi->Content[Phi->Index(2 * j, 0)] * (P->Content[P->Index(2 * i, 2 * j + 1)] * Phi->Content[Phi->Index(2 * i, 0)] - P->Content[P->Index(2 * i + 1, 2 * j + 1)] * Phi->Content[Phi->Index(2 * i + 1, 0)]);
-//
-//			PPrior->Content[PPrior->Index(2*i+1, 2*j)] = Phi->Content[Phi->Index(2 * j, 0)] * (P->Content[P->Index(2 * i, 2 * j)] * Phi->Content[Phi->Index(2 * i + 1, 0)] + P->Content[P->Index(2 * i + 1, 2 * j)] * Phi->Content[Phi->Index(2 * i, 0)]) -
-//				                                     Phi->Content[Phi->Index(2 * j + 1, 0)] * (P->Content[P->Index(2 * i, 2 * j + 1)] * Phi->Content[Phi->Index(2 * i + 1, 0)] + P->Content[P->Index(2 * i + 1, 2 * j + 1)] * Phi->Content[Phi->Index(2 * i, 0)]);
-//
-//			PPrior->Content[PPrior->Index(2*i+1, 2*j+1)] = Phi->Content[Phi->Index(2 * j + 1, 0)] * (P->Content[P->Index(2 * i, 2 * j)] * Phi->Content[Phi->Index(2 * i + 1, 0)] + P->Content[P->Index(2 * i + 1, 2 * j)] * Phi->Content[Phi->Index(2 * i, 0)]) +
-//				                                       Phi->Content[Phi->Index(2 * j, 0)] * (P->Content[P->Index(2 * i, 2 * j + 1)] * Phi->Content[Phi->Index(2 * i + 1, 0)] + P->Content[P->Index(2 * i + 1, 2 * j + 1)] * Phi->Content[Phi->Index(2 * i, 0)]);
-//		}
-//	}
-//
-//	 Phi*P_K-1*Phi' + Q
-//	for (int i = 0; i < 2*N; i++)
-//	{
-//		PPrior->Content[PPrior->Index(i, i)] += Q;
-//	}
-//
-//	cout << "-----------P Prior-----------------" << "\n";
-//	PPrior->PrintMatrix();
-//
-//	 K_k
-//	 Calculate inverse
-//	double invSum = 0;
-//	for (int i = 0; i < N; i++)
-//	{
-//		for (int j = 0; j < N; j++)
-//		{
-//			invSum += PPrior->Content[PPrior->Index(2 * i, 2 * j)];
-//		}
-//	}
-//	double inverse = 1.0 / (invSum + R);
-//
-//	for (int i = 0; i < 2 * N; i++)
-//	{
-//		double tempSum = 0;
-//		for (int j = 0; j < N; j++)
-//			tempSum += PPrior->Content[PPrior->Index(i, 2 * j)];
-//		K->Content[K->Index(i, 0)] = inverse*tempSum;
-//	}
-//
-//	  q_hat_k
-//	double sMinusHqk = measurement;
-//	for (int i = 0; i < N; i++)
-//	{
-//		sMinusHqk -= qPrior->Content[qPrior->Index(2 * i, 0)];
-//	}
-//
-//	for (int i = 0; i < 2 * N; i++)
-//	{
-//		q->Content[q->Index(i, 0)] = qPrior->Content[qPrior->Index(i, 0)] + K->Content[K->Index(i, 0)] * sMinusHqk;
-//	}
-//
-//	cout << "-----------q_hat_k-----------------" << "\n";
-//	q->PrintMatrix();
-//
-//	 P_hat_k
-//	for (int j = 0; j < 2*N; j++) // each row second
-//	{
-//		double tempSum = 0;
-//		for (int k = 0; k < N; k++)
-//			tempSum += PPrior->Content[PPrior->Index(2 * k, j)];
-//
-//		for (int i = 0; i < 2 * N; i++) // each column  first
-//			P->Content[P->Index(i, j)] = -K->Content[K->Index(i, 0)] * tempSum + PPrior->Content[PPrior->Index(i, j)];
-//	}
-//
-//	cout << "-----------P_hat_k-----------------" << "\n";
-//	P->PrintMatrix();
-//
-//	 Estimation output
-//	double spEst = 0;
-//	for (int i = 0; i < N; i++)
-//	{
-//		spEst += q->Content[q->Index(2 * i, 0)];
-//	}
-//
-//	return spEst;
-//}
-
 double CKalmanFilter::RunKalman(double measurement)
 {
 	// 1: q_k_prior
@@ -199,9 +100,6 @@ double CKalmanFilter::RunKalman(double measurement)
 		PPrior->Content[i*PPrior->Column + i] += Q;
 	}
 
-	////cout << "-----------P Prior-----------------" << "\n";
-	////PPrior->PrintMatrix();
-
 	// K_k
 	// Calculate inverse
 	double invSum = 0;
@@ -222,9 +120,6 @@ double CKalmanFilter::RunKalman(double measurement)
 		K->Content[i] = inverse*tempSum;
 	}
 
-	//cout << "-----------KMatrix-----------------" << "\n";
-	//K->PrintMatrix();
-
 	//  q_hat_k
 	double sMinusHqk = measurement;
 	for (int i = 0; i < N; i++)
@@ -236,9 +131,6 @@ double CKalmanFilter::RunKalman(double measurement)
 	{
 		q->Content[i] = qPrior->Content[i] + K->Content[i] * sMinusHqk;
 	}
-
-	//cout << "-----------q_hat_k-----------------" << "\n";
-	//q->PrintMatrix();
 
 	// P_hat_k
 	for (int j = 0; j < 2 * N; j++) // each row second
@@ -253,9 +145,6 @@ double CKalmanFilter::RunKalman(double measurement)
 			P->Content[indexPij] = -K->Content[i] * tempSum + PPrior->Content[indexPij];
 		}
 	}
-
-	//cout << "-----------P_hat_k-----------------" << "\n";
-	//P->PrintMatrix();
 
 	// Estimation output
 	double spEst = 0;
