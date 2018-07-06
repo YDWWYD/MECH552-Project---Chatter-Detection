@@ -1,15 +1,11 @@
-﻿  mainWithMatlab.cpp
-g:\mech552 project - chatter detection\chatterdetectionautocorrection\chatterdetectionautocorrection\mainwithmatlab.cpp(80): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-g:\mech552 project - chatter detection\chatterdetectionautocorrection\chatterdetectionautocorrection\mainwithmatlab.cpp(85): warning C4101: 'clockBegin': unreferenced local variable
-g:\mech552 project - chatter detection\chatterdetectionautocorrection\chatterdetectionautocorrection\mainwithmatlab.cpp(85): warning C4101: 'clockEnd': unreferenced local variable
-  main.cpp
-  CNonlinearEnergyOperator.cpp
-  CMatrix.cpp
-  CKalmanFilter.cpp
-  CMeanFilter.cpp
-  CChatterDetectionSystem.cpp
-  CChatterDetection.cpp
-  CBandpassFilters.cpp
-  Generating Code...
-  ChatterDetectionAutoCorrection.vcxproj -> G:\MECH552 Project - Chatter Detection\ChatterDetectionAutoCorrection\Debug\ChatterDetectionAutoCorrection.exe
-  ChatterDetectionAutoCorrection.vcxproj -> G:\MECH552 Project - Chatter Detection\ChatterDetectionAutoCorrection\Debug\ChatterDetectionAutoCorrection.pdb (Partial PDB)
+﻿mainWithMatlab.obj : error LNK2019: unresolved external symbol _mxGetPr referenced in function _main
+mainWithMatlab.obj : error LNK2019: unresolved external symbol _mxCreateDoubleMatrix_730 referenced in function _main
+mainWithMatlab.obj : error LNK2019: unresolved external symbol _engEvalString referenced in function _main
+mainWithMatlab.obj : error LNK2019: unresolved external symbol _engOpen referenced in function _main
+mainWithMatlab.obj : error LNK2019: unresolved external symbol _engClose referenced in function _main
+mainWithMatlab.obj : error LNK2019: unresolved external symbol _engPutVariable referenced in function _main
+E:\MatLab R2017b\extern\lib\win64\microsoft\libmx.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+E:\MatLab R2017b\extern\lib\win64\microsoft\libmex.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+E:\MatLab R2017b\extern\lib\win64\microsoft\libmat.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+E:\MatLab R2017b\extern\lib\win64\microsoft\libeng.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+G:\MECH552 Project - Chatter Detection\ChatterDetectionAutoCorrection\Debug\ChatterDetectionAutoCorrection.exe : fatal error LNK1120: 6 unresolved externals

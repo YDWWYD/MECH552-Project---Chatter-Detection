@@ -1,0 +1,5 @@
+﻿  mainWithMatlab.cpp
+g:\mech552 project - chatter detection\chatterdetectionautocorrection\chatterdetectionautocorrection\mainwithmatlab.cpp(85): warning C4101: 'clockBegin': unreferenced local variable
+g:\mech552 project - chatter detection\chatterdetectionautocorrection\chatterdetectionautocorrection\mainwithmatlab.cpp(85): warning C4101: 'clockEnd': unreferenced local variable
+  ChatterDetectionAutoCorrection.vcxproj -> G:\MECH552 Project - Chatter Detection\ChatterDetectionAutoCorrection\x64\Debug\ChatterDetectionAutoCorrection.exe
+  ChatterDetectionAutoCorrection.vcxproj -> G:\MECH552 Project - Chatter Detection\ChatterDetectionAutoCorrection\x64\Debug\ChatterDetectionAutoCorrection.pdb (Partial PDB)

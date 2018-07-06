@@ -77,7 +77,7 @@ int main(void)
 	if (N <= numOfFlute)
 		numOfBand = 1;
 	else
-		numOfBand = ceil(stopFreq / TPE) - 1;
+		numOfBand = (int)ceil(stopFreq / TPE) - 1;
 
 	double dt = 0.1; // Original 0.1
 
@@ -87,10 +87,19 @@ int main(void)
 	CChatterDetectionSystem myChatterDetectionSys(N, numOfFlute, spindleSpeed, samplingPeriod, lamda, R, numOfBand,
 		energyThreshold, energyRatioLimit, integrationFactor, chatterEnergyThreshold, ndMean, energyMeanFilterDelay);
 
-	cout << "----------------------Numerator-----------------\n";
-	myChatterDetectionSys.BandpassFilters->Numerator->PrintMatrix();
-	cout << "----------------------Denominator------------------\n";
-	myChatterDetectionSys.BandpassFilters->Denominator->PrintMatrix();
+	//cout << "----------------------Numerator-----------------\n";
+	//myChatterDetectionSys.BandpassFilters->Numerator->PrintMatrix();
+	//cout << "----------------------Denominator------------------\n";
+	//myChatterDetectionSys.BandpassFilters->Denominator->PrintMatrix();
+
+	//--------------------------------Matlab Engine------------------
+	Engine *ep;
+	mxArray *Chatter = NULL; 
+	mxArray *T = NULL;
+	mxArray *Bandpass = NULL;
+	double *ChatterArray = new double[numOfData];
+	double *time = new double[numOfData];
+	double *bandpassArray = new double[numOfData*numOfBand];
 
 	//FILE* OutFilePointer = fopen("..\\Kalman Output.txt", "w");
 	FILE* BandpassPointer = fopen("..\\Bandpass Filter Output.txt", "w");
@@ -128,6 +137,14 @@ int main(void)
 		//fprintf(FilteredChatterEng, "%.6f\n", myChatterDetectionSys.ChatterMeanFilter->Output);
 		//fprintf(FilteredPeriodicEng, "%.6f\n", myChatterDetectionSys.PeriodicMeanFilter->Output);
 		//fprintf(TimerPointer, "%d\n", chrono::duration_cast<chrono::microseconds>(time).count());
+
+
+		for (int j = 0; j < myChatterDetectionSys.BandpassFilters->NumberOfFilters; j++)
+		{
+			bandpassArray[i*numOfBand + j] = myChatterDetectionSys.BandpassFilters->BandpassOutputs->Content[j];
+		}
+		ChatterArray[i] = myChatterDetectionSys.ChatterDetection->ChatterDetected;
+		time[i] = Ts*i;
 	}
 
 	cout << "done!\n";
@@ -141,6 +158,35 @@ int main(void)
 	fclose(FilteredChatterEng);
 	fclose(FilteredPeriodicEng);
 	fclose(TimerPointer);
+
+	cout << "Processing data" << endl;
+	if (!(ep = engOpen(""))) {
+		fprintf(stderr, "\nCan't start MATLAB engine\n");
+		return EXIT_FAILURE;
+	}
+
+	engEvalString(ep, "clear, clc, close all");
+	engEvalString(ep, "CompareRealTime; plot(ChatterDetected.time, ChatterDetected.signals.values)");
+
+	Chatter = mxCreateDoubleMatrix(numOfData, 1, mxREAL);
+	memcpy((void*)mxGetPr(Chatter), (void *)ChatterArray, sizeof(double)*numOfData);
+	engPutVariable(ep, "CChatterDetected", Chatter);
+
+	T = mxCreateDoubleMatrix(numOfData, 1, mxREAL);
+	memcpy((void*)mxGetPr(T), (void *)time, sizeof(double)*numOfData);
+	engPutVariable(ep, "T", T);
+
+	Bandpass = mxCreateDoubleMatrix(numOfBand, numOfData, mxREAL);
+	memcpy((void*)mxGetPr(Bandpass), (void *)bandpassArray, sizeof(double)*numOfData*numOfBand);
+	engPutVariable(ep, "CBandpass", Bandpass);
+
+
+	//engEvalString(ep, "figure; plot(T,CChatterDetected)");
+	engEvalString(ep, "hold on; plot(T,CChatterDetected); legend('C','matlab')");
+	//engEvalString(ep, "legend('C','matlab')");
+	//engEvalString(ep, "figure; plot(T,CBandpass)");
+	cout << "Processing data done." << endl;
+	engClose(ep);
 
 	system("pause");
 	return 0;
