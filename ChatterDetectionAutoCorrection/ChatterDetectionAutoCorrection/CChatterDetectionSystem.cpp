@@ -77,7 +77,7 @@ void CChatterDetectionSystem::Run(double measurement)
 	if (ChatterDetection->ChatterDetected == 1)
 	{
 		CalculateChatterFreq();
-		double newSpindleSpeed = CalculateNewSpindleSpeed(ChatterFreq->Content[0], SpindleSpeed);
+		double newSpindleSpeed = CalculateNewSpindleSpeed(ChatterFreq->Content[0]);
 	}
 }
 
@@ -131,13 +131,13 @@ void CChatterDetectionSystem::CalculateChatterFreq(/*MeanFilterOutput* meanFilte
 		totalEng += ChatterEnergy->Content[i];
  	}
 
-	for (int i = 0; i < numOfInput; i++)
-	{
-		cout << "Freq is " << ChatterOutput[i].Freq << endl;
-		//cout << "Amp is " << ChatterOutput[i].Amp << endl;
-		cout << "Chatter energy ratio is " << ChatterOutput[i].ChatterEnergy / totalEng << endl;
-	}
-	cout << "\n\n";
+	//for (int i = 0; i < numOfInput; i++)
+	//{
+	//	cout << "Freq is " << ChatterOutput[i].Freq << endl;
+	//	//cout << "Amp is " << ChatterOutput[i].Amp << endl;
+	//	cout << "Chatter energy ratio is " << ChatterOutput[i].ChatterEnergy / totalEng << endl;
+	//}
+	//cout << "\n\n";
 
 	double tempTotalEnergy = 0;
 
@@ -147,7 +147,7 @@ void CChatterDetectionSystem::CalculateChatterFreq(/*MeanFilterOutput* meanFilte
 		tempTotalEnergy += maxChatterEnergy->ChatterEnergy;
 
 		ChatterFreq->Content[i] = maxChatterEnergy->Freq;
-		cout << "Chatter Frequency " << i << " is " << ChatterFreq->Content[i]  << "rad/s" << endl;
+		//cout << "Chatter Frequency " << i << " is " << ChatterFreq->Content[i]  << "rad/s" << endl;
 
 		if (tempTotalEnergy >= ThresholdEng)
 		{
@@ -171,18 +171,15 @@ void CChatterDetectionSystem::CalculateChatterFreq(/*MeanFilterOutput* meanFilte
 			}
 		}
 	}
-
-
 }
 
-double CChatterDetectionSystem::CalculateNewSpindleSpeed(double dominantChatterFreq, double currentSpindleSpeed)
+double CChatterDetectionSystem::CalculateNewSpindleSpeed(double dominantChatterFreq)
 {
-	double highSpindleSpeed = dominantChatterFreq / floor(dominantChatterFreq / currentSpindleSpeed);
-	double lowSpindleSpeed = dominantChatterFreq / ceil(dominantChatterFreq / currentSpindleSpeed);
+	double highSpindleSpeed = dominantChatterFreq / floor(dominantChatterFreq / SpindleSpeed);
+	double lowSpindleSpeed = dominantChatterFreq / ceil(dominantChatterFreq / SpindleSpeed);
 	double newSpindleSpeed;
-	//NewSpindleSpeed = newSpindleSpeed;
 	
-	if (highSpindleSpeed / currentSpindleSpeed >= 1.5) //first check if override is bigger than 150% which is the limit
+	if (highSpindleSpeed / SpindleSpeed >= 1.5) //first check if override is bigger than 150% which is the limit
 		newSpindleSpeed = lowSpindleSpeed;
 	else if (highSpindleSpeed / (2 * PI) * 60 >= 12000) //then if high frequency > 12000 rpm which is the limit
 		newSpindleSpeed = lowSpindleSpeed;

@@ -54,7 +54,7 @@ public:
 	~CChatterDetectionSystem();
 	void Run(double measuremnt);
 	void CalculateChatterFreq();
-	double CalculateNewSpindleSpeed(double dominantChatterFreq, double currentSpindleSpeed);
+	double CalculateNewSpindleSpeed(double dominantChatterFreq);
 	void UpdateSystem(double newSpindleSpeed);
 	double FindDominantFreq(void);
 	double CalculateChatterEnergy(CMatrix* freqIn, CMatrix* ampIn);
