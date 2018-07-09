@@ -2,7 +2,9 @@
 #define __CChatterDetection_
 
 #include "CMatrix.h"
-
+/// <summary>
+/// ChatterDetection class which contains energy information and detection results
+/// </summary>
 class CChatterDetection
 {
 public:
@@ -16,13 +18,12 @@ public:
 private:
 	int PrevChatterDetected;
 	int DetectionDelay;
-	double IntegrationFactor;
 	CMatrix* DelayedPeriodicEnergy;
 
 public:
 	CChatterDetection(double ndMean, double energyThreshold, double energyRatioLimit);
 	~CChatterDetection();
-	void RunChatterDetection(/*CMatrix* periodicAmplitude, double spindleSpeed, MeanFilterOutput* meanFilterOutputs, int numOfBand*/);
+	void RunChatterDetection();
 };
 
 #endif

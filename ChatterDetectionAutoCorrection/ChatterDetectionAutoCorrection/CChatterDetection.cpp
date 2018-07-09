@@ -5,13 +5,12 @@ CChatterDetection::CChatterDetection(double ndMean, double energyThreshold, doub
 	ChatterDetected = 0;
 	PeriodicEnergy = 0;
 	ChatterEnergy = 0;
-
 	EnergyRatio = 0;
 	EnergyThreshold = energyThreshold;
 	EnergyRatioLimit = energyRatioLimit;
 
 	PrevChatterDetected = 0;
-	DetectionDelay = (int)round((ndMean + 1) / 2);
+	DetectionDelay = (int)round((ndMean + 1) / 2); // num of delay of periodic energy
 	DelayedPeriodicEnergy = new CMatrix(DetectionDelay, 1);
 }
 
@@ -20,7 +19,10 @@ CChatterDetection::~CChatterDetection(void)
 	delete DelayedPeriodicEnergy;
 }
 
-void CChatterDetection::RunChatterDetection(/*CMatrix* periodicAmplitude, double spindleSpeed, MeanFilterOutput* meanFilterOutputs, int numOfBand*/)
+/// <summary>
+/// Calculate energy ratio; Chatter detection criteria; Update delayed periodic energy matrix
+/// </summary>
+void CChatterDetection::RunChatterDetection()
 {
 	EnergyRatio = ChatterEnergy / (ChatterEnergy + DelayedPeriodicEnergy->Content[0]);
 
@@ -35,10 +37,10 @@ void CChatterDetection::RunChatterDetection(/*CMatrix* periodicAmplitude, double
 	else
 		ChatterDetected = 0;
 
-	// Update if chatter is detected by previous data
+	// Store chatter detection status using previous data
 	PrevChatterDetected = ChatterDetected;
 
-	// Update delayed periodic energy
+	// Update delayed periodic energy, DelayedPeriodicEnergy->Content[0] is the most delayed
 	for (int i = 0; i < DetectionDelay - 1; i++)
 	{
 		DelayedPeriodicEnergy->Content[i] = DelayedPeriodicEnergy->Content[i + 1];
