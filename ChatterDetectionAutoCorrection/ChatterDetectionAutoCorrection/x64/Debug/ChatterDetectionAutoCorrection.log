@@ -1,12 +1,3 @@
-﻿  main.cpp
-  CNonlinearEnergyOperator.cpp
-  CMeanFilter.cpp
-  CChatterDetectionSystem.cpp
-  Generating Code...
-  Compiling...
-  mainWithMatlab.cpp
-g:\mech552 project - chatter detection\chatterdetectionautocorrection\chatterdetectionautocorrection\mainwithmatlab.cpp(81): warning C4101: 'clockBegin': unreferenced local variable
-g:\mech552 project - chatter detection\chatterdetectionautocorrection\chatterdetectionautocorrection\mainwithmatlab.cpp(81): warning C4101: 'clockEnd': unreferenced local variable
-  Generating Code...
+﻿  CChatterDetectionSystem.cpp
   ChatterDetectionAutoCorrection.vcxproj -> G:\MECH552 Project - Chatter Detection\ChatterDetectionAutoCorrection\x64\Debug\ChatterDetectionAutoCorrection.exe
   ChatterDetectionAutoCorrection.vcxproj -> G:\MECH552 Project - Chatter Detection\ChatterDetectionAutoCorrection\x64\Debug\ChatterDetectionAutoCorrection.pdb (Partial PDB)

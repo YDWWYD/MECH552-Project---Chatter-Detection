@@ -11,7 +11,7 @@ CChatterDetection::CChatterDetection(double ndMean, double energyThreshold, doub
 
 	PrevChatterDetected = 0;
 	DetectionDelay = (int)round((ndMean + 1) / 2); // num of delay of periodic energy
-	DelayedPeriodicEnergy = new CMatrix(DetectionDelay, 1);
+	DelayedPeriodicEnergy = new CMatrix(DetectionDelay, 1); // initial condition is 0
 }
 
 CChatterDetection::~CChatterDetection(void)
