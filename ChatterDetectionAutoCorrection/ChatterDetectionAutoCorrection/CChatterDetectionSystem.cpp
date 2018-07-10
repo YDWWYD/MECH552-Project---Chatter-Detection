@@ -10,7 +10,7 @@ CChatterDetectionSystem::CChatterDetectionSystem(int _N, int numOfFlute, double 
 	N = _N;
 	NumberOfFlute = numOfFlute;
 	SamplingPeriod = samplingPeriod;
-	Lamda = lamda; 
+	Lamda = lamda;
 	R = _R;
 	//StartFreq = startFreq;
 	//StopFreq = stopFreq; 
@@ -117,7 +117,7 @@ double CChatterDetectionSystem::CalculatePeriodicEnergy(CMatrix* amplitude)
 	return periodicEnergy;
 }
 
-void CChatterDetectionSystem::CalculateChatterFreq(/*MeanFilterOutput* meanFilterOutputs, double totalChatterEnergy, int numOfInput, double threshold*/)
+void CChatterDetectionSystem::CalculateChatterFreq()
 {
 	//sort(meanFilterOutputs, meanFilterOutputs + numOfInput, sortByChatterEnergy);
 	int numOfInput = BandpassFilters->NumberOfFilters;

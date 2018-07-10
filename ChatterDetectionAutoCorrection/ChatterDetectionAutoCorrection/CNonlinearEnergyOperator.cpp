@@ -1,10 +1,16 @@
 #include "CNonlinearEnergyOperator.h"
 
+/// <summary>
+/// Constructor for NEO
+/// </summary>
+/// <param name="samplingPeriod"> Sampling Period [s]</param>
+/// <param name="TPE"> Tooth-passing frequency [Hz]</param>
+/// <param name="bandpassFilters">reference of a bandpass filter</param>
 CNonlinearEnergyOperator::CNonlinearEnergyOperator(double samplingPeriod, double TPE, CBandpassFilters& bandpassFilters)
 {
 	T = samplingPeriod;
 	D = new CMatrix(1, bandpassFilters.NumberOfFilters);
-	*D = CalculateLag(samplingPeriod, TPE, bandpassFilters);
+	CalculateLag(TPE, bandpassFilters);
 	//D->PrintMatrix();
 	SDelayed = new CMatrix(bandpassFilters.NumberOfFilters, 4 * (int)D->matrixMax());
 	phi_y_kD = new CMatrix(bandpassFilters.NumberOfFilters, 1);
@@ -28,16 +34,17 @@ CNonlinearEnergyOperator::CNonlinearEnergyOperator(double samplingPeriod, double
 	PrevAmp = new CMatrix(bandpassFilters.NumberOfFilters, 1);
 }
 
-CMatrix CNonlinearEnergyOperator:: CalculateLag(double samplingPeriod, double TPE, CBandpassFilters& bandpassFilters)
+/// <summary>
+/// Calculate the lag parameter matrix.
+/// </summary>
+/// <param name="TPE">Tooth-passing frequency [Hz]</param>
+/// <param name="bandpassFilters">reference of a bandpass filter. Must pass in a reference. If pass in by value, the destructor will be called, making the object useless later</param>
+void CNonlinearEnergyOperator::CalculateLag(double TPE, CBandpassFilters& bandpassFilters)
 {
-	CMatrix D(1, bandpassFilters.NumberOfFilters); // Initialize lag matrix 
-
 	for (int i = 0; i < bandpassFilters.NumberOfFilters; i++)
 	{
-		D.Content[i] = round((1 / samplingPeriod) / (4 * (bandpassFilters.StartBand + i + 1)*TPE + TPE / 2) + 0.5);
+		D->Content[i] = round((1 / T) / (4 * (bandpassFilters.StartBand + i + 1)*TPE + TPE / 2) + 0.5);
 	}
-
-	return D;
 }
 
 CNonlinearEnergyOperator::~CNonlinearEnergyOperator(void)
@@ -65,9 +72,13 @@ CNonlinearEnergyOperator::~CNonlinearEnergyOperator(void)
 	delete PrevAmp;
 }
 
+/// <summary>
+/// Run NEO algorithm. Refer to NEO Simulink block for detailed algorithm.
+/// </summary>
+/// <param name="input">Input[m x 1] is the output from the bandpass filter bank</param>
 void CNonlinearEnergyOperator::RunNEO(CMatrix* input)
 {
-	// Update input from bandpass filter
+	// Update input from bandpass filter bank
 	for (int i = 0; i < input->Row; i++)
 	{
 		int delay = (int)D->Content[i];
@@ -88,9 +99,6 @@ void CNonlinearEnergyOperator::RunNEO(CMatrix* input)
 	// Calculate Phi[y_(k-D)], Phi[y_(k-2D)], Phi[s_(k-2D)]
 	for (int i = 0; i < input->Row; i++)
 	{
-		//phi_y_kD.content[i][0] = 1 / pow(T, 2)*(pow(y_kD.content[i][0], 2) - y_k2D.content[i][0] * y_k.content[i][0]);
-		//phi_y_k2D.content[i][0] = 1 / pow(T, 2)*(pow(y_k2D.content[i][0], 2) - y_k3D.content[i][0] * y_kD.content[i][0]);
-		//phi_s_k2D.content[i][0] = 1 / pow(T, 2)*(pow(s_k2D.content[i][0], 2) - s_k3D.content[i][0] * s_kD.content[i][0]);
 		phi_y_kD->Content[i] = pow(y_kD->Content[i], 2) - y_k2D->Content[i] * y_k->Content[i];
 		phi_y_k2D->Content[i] = pow(y_k2D->Content[i], 2) - y_k3D->Content[i] * y_kD->Content[i];
 		phi_s_k2D->Content[i] = pow(s_k2D->Content[i], 2) - s_k3D->Content[i] * s_kD->Content[i];

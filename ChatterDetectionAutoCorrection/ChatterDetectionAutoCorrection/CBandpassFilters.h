@@ -4,7 +4,7 @@
 #include "CMatrix.h"
 
 /// <summary>
-/// Class of bandpass filter bank. Refer to Bandpass Filter Bank Simulink block for detailed information on properties and algorithm 
+/// Class of bandpass filter bank. Refer to Bandpass Filter Bank Simulink block for detailed information on properties and algorithm.
 /// </summary>
 class CBandpassFilters
 {
