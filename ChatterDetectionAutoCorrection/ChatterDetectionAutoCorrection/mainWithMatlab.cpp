@@ -28,8 +28,8 @@ int main(void)
 	{
 	case(1): N = 20;
 		filePath = "..\\CNCData.txt";
-		//numOfData = 100032;
-		numOfData = 50001;
+		numOfData = 100032;
+		//numOfData = 50001;
 		Ts = (double)1 / 10000;
 		break;
 	case(2): N = 50;
@@ -129,7 +129,6 @@ int main(void)
 		//fprintf(FilteredPeriodicEng, "%.6f\n", myChatterDetectionSys.PeriodicMeanFilter->Output);
 		//fprintf(TimerPointer, "%d\n", chrono::duration_cast<chrono::microseconds>(time).count());
 
-
 		for (int j = 0; j < myChatterDetectionSys.BandpassFilters->NumberOfFilters; j++)
 		{
 			bandpassArray[i*numOfBand + j] = myChatterDetectionSys.BandpassFilters->BandpassOutputs->Content[j];
@@ -175,12 +174,15 @@ int main(void)
 	engPutVariable(ep, "CBandpass", Bandpass);
 
 	//engEvalString(ep, "figure; plot(T,CChatterDetected)");
-	engEvalString(ep, "hold on; plot(T,CChatterDetected,'.'); legend('C','matlab')");
+	engEvalString(ep, "hold on; plot(T,CChatterDetected,'.'); legend('matlab','C')");
 	//engEvalString(ep, "legend('C','matlab')");
 	//engEvalString(ep, "figure; plot(T,CBandpass)");
 	cout << "Processing data done." << endl;
 
 	/// destroy all 
+	mxDestroyArray(Chatter);
+	mxDestroyArray(T);
+	mxDestroyArray(Bandpass);
 	engClose(ep);
 
 	system("pause");
